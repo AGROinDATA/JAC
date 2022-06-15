@@ -1,0 +1,13 @@
+Especie,Zapallo temp/guard,Lechuga,Choclo,Tomate al aire libre,Tomate invernadero,Zanahoria,Repollo,Alcachofa,Cebolla de Guarda,Cebolla temprana,Brócoli,Ajo,Betarraga,Coliflor,Pimiento,Haba,Apio,Zapallo Italiano,Acelga,Arveja Verde,Espinaca,Melón,Pepino de ensalada,Orégano,Sandía,Ají,Espárrago,Trigo,Maíz,Cebada,Arroz,Avena,Garbanzo,Lenteja,Papa,Poroto,Tabaco,Tomate Industrial,Pimentón industrial,Almendro,Nogal,Frambuesa,Arándano americano,Moras cultivadas,Cerezo,Nectarino,Duraznero cons fresco,Duraznero conservero,Ciruelo europeo,Ciruelo japonés,Manzano rojo,Manzano verde,Peral,Limonero,Naranjo,Olivo,Palto,Vid de mesa,Vid vinifera,Kiwi,Granado
+ENE,,11,25,82,,2,5,,,,,,2,,,,8,25,,,,13,13,22,19,24,,,,,,,,5.5,,,,15,46,,,26,,270,23,28,55,37,55,45,,40,,,,,8,,,,
+FEB,,24,,82,,,5,5,12,,,,,,69,,,,7,,,13,13,,,24,,,,,,,5,,,,35,15,46,22,,26,,270,,,55,,,,37,40,42,7,,,,118,,,
+MAR,20,24,,,,,,5,12,,,32,,,69,,,,,,,,,,,24,,,0.5,,,,,,,,35,15,46,22,,26,,,,,,,,,,40,,7,,,,,10,,
+ABR,20,,,,,17,,,,,,,225,,,,,,12,,,,,,,24,,,0.5,,,,,,,11,35,15,,,21,26,,,,,,,,,,,,7,,,,,10,37,90
+MAY,,,,,,17,34,,,1,6,,225,,,2,45,,12,1,,,,,,24,,,0.5,,,,,2,,,,,,,9,26,21,,,,,,,,14,,,7,,10,,16,,,18
+JUN,,,,,12,17,34,,,,,,,,,,45,,12,1,,,,,,,,,,,,,,,56,,,,,,,10,21,20,,14,30,15,11,27,14,25,18,7,40,10,,16,4,12,
+JUL,,,,,12,17,,27,,,,,,,,,,,12,,,,,,,,,,,,,,,,,,,,,,,10,21,,,14,,15,11,,,25,18,8,40,6,,16,4,12,
+AGO,,,,,,17,,27,,,79,,,,,,,,12,,,,,,9,,,0.3,,,,,2,,,,,,,,,,,,37,,,,,,,,,,40,,30,,,,
+SEP,2,,2,,,17,,27,1,,,,,6,,,,8,,40,5,,,,9,5,58,,1,2.5,,,2,,,,,8,,,6,,15,,,,,,,,,,,7,40,,30,,,,
+OCT,2,,,6,162,,,27,1,16,,,,,9,,,,,40,,6,8,,,5,58,,1,,1,,,,,2,8,8,12,4,,,,,,,,,,,,40,,7,40,,30,,,,
+NOV,,,,,162,,,27,,16,,52,,,,,,,,,76,,,,,,,,1,,1,1,,,,2,,8,12,,,,138,,,4,,3,,,6,40,,7,,,30,,,,
+DIC,,11,,,162,,,27,,16,,52,,70,,,,25,,,,13,,,19,,,,,7.2,,1,,,,,,,,,,26,138,,150,4,,3,,,,40,8,7,,,38,,,,
