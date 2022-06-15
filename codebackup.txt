@@ -1,0 +1,413 @@
+# jornales agricolas
+
+library(rsconnect)
+library(shiny)
+library(shinydashboard)
+library(ggplot2)
+library(forcats)
+library(plotly)
+library(readxl)
+
+
+#data
+
+#nc
+
+file1<- "https://github.com/AGROinDATA/JAC/blob/main/tnchico.xls"
+temp <-tempfile()
+download.file(file1, temp)
+tDataNC <- read_xls("tnchico.xls")
+
+file2<- "https://github.com/AGROinDATA/JAC/blob/main/NChico.xls"
+temp <-tempfile()
+download.file(file2, temp)
+DataNC <- read_xls("NChico.xls")
+#tDataNC <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/tnchico.xls")
+#DataNC <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/NChico.xls")
+
+#ng
+
+file3<- "https://github.com/AGROinDATA/JAC/blob/main/tNgrande.xls"
+temp <-tempfile()
+download.file(file3, temp)
+tDataNG  <- read_xls("tNgrande.xls")
+
+file4<- "https://github.com/AGROinDATA/JAC/blob/main/Ngrande.xls"
+temp <-tempfile()
+download.file(file4, temp)
+DataNG <- read_xls("Ngrande.xls")
+#tDataNG <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/tNgrande.xls")
+#DataNG <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/Ngrande.xls")
+
+#centro
+
+file5<- "https://github.com/AGROinDATA/JAC/blob/main/tcentral.xls"
+temp <-tempfile()
+download.file(file5, temp)
+tDatacentral <- read_xls("tcentral.xls")
+
+file6<- "https://github.com/AGROinDATA/JAC/blob/main/central.xls"
+temp <-tempfile()
+download.file(file6, temp)
+DataNcentral <- read_xls("central.xls")
+#tDatacentral <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/tcentral.xls")
+#DataNcentral <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/central.xls")
+
+#sur
+
+file7<- "https://github.com/AGROinDATA/JAC/blob/main/tsur.xls"
+temp <-tempfile()
+download.file(file7, temp)
+tDatasur <- read_xls("tsur.xls")
+
+file8<- "https://github.com/AGROinDATA/JAC/blob/main/sur.xls"
+temp <-tempfile()
+download.file(file8, temp)
+Datasur <- read_xls("sur.xls")
+#tDatasur <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/tsur.xls")
+#Datasur <- read_xls("C:/Users/zorro/Documents/Consultant business/Agro in Data/Development/masinfo/jornalesagricolas/sur.xls")
+
+
+ui <- dashboardPage(
+  
+  skin = "green",
+  
+  dashboardHeader(title = "Jornales Agricultura Chile by AGRO in DATA", titleWidth = 450,
+                  tags$li(a(href= "https://agroindata.netlify.app/",
+                            img(src = "https://agroindata.netlify.app/img/profile.png",
+                                title= "AGRO in DATA", height= "30px"),
+                            style= "pading-top:10px"),
+                          class = "dropdown")),
+  
+  dashboardSidebar(tags$li(a(href= "https://agroindata.netlify.app/",
+                             img(src = "https://agroindata.netlify.app/img/profile.png",
+                                 title= "AGRO in DATA", height= "180px"),
+                             style= "pading-top:10px"),
+                           class = "dropdown"),
+                   sidebarMenu(
+                     menuItem("Inicio", tabName = "in", icon = icon("database")),
+                     menuItem("Arica y Atacama", tabName = "nc", icon = icon("database")),
+                     menuItem("Coquimbo y Valparaíso", tabName = "ng", icon = icon("database")),
+                     menuItem("RM, O'higgins y Maule", tabName = "central", icon = icon("database")),
+                     menuItem("Biobío y Araucanía", tabName = "sur", icon = icon("database")),
+                     menuItem("Sobre el Proyecto", tabName = "pr", icon = icon("database")))),
+  
+  dashboardBody(
+    tabItems(
+      tabItem("in",
+              h1("Presentación"),
+              box("Autor: Christian Stange Marcus (christianstange@gmail.com), powered by AGRO in DATA (agroindata@gmail.com).", width = 12),
+              box("¿Qué?,¿Cuándo?, ¿cuántos? y ¿dónde? Preguntas que muchas veces son difíciles de contestar para los agricultores, empresarios agrícolas, trabajadores agrícolas, académicos o estudiantes del área agrícola.
+El proyecto JAC (Jornales en la Agricultura en Chile)  busca ofrecer una comparación sencilla de jornales diarios por hectárea estimados por cultivos entre las macro zonas de Arica al Biobío en Chile. Basado en fuentes oficiales gubernamentales de ODEPA (Por medio del informe: Matriz de labores de cultivos por macro zonas disponible en su página web).
+La aplicación JAC busca poder comparar e informar los jornales por hectárea que requiere cada cultivo para las distintas zonas, considerando niveles de producción de tecnología media . Con la finalidad de poder comparar la demanda en jornales en los distintos cultivos. También permite explorar alternativas de cultivos, comparando la cantidad y los tiempos en donde los jornales son requeridos según fuentes oficiales.
+(nota: jornal: Trabajo que se hace en un día según la RAE).
+" , width = 12),
+              box("La Aplicación JAC permite identificar meses y cultivos en donde se requiere mayor número de jornales. Así como también permite comparar demanda de jornales  para identificar cultivos que sean sinérgicos o que compiten por mano de obra.", width=12),
+              h1("Modo de uso"),
+              box("La aplicación web se compone de pestañas laterales que indican las distintas zonas en donde se encuentran los datos.",width = 12),
+              h1("Paso 1"),
+              box("Elegir una macrozona de interés (eligiendo una de las pestañas laterales se accede al panel de datos).",width=12),
+              h1("Paso 2"),
+              box("La página se compone de un gráfico superior y dos gráficos comparativos inferiores.
+En la parte superior existe un selector de variables para identificar el número de jornales anuales y para los distintos meses. Este gráfico se puede descargar como (png) haciendo click en el icono superior de la cámara fotográfica. Además existen otras opciones como zoom in y out, laso y caja de selección, autoscale. 
+", width=12),
+              h1("Paso 3"),
+              box("En los gráficos comparativos inferiores, se encuentran dos gráficos de barras que permiten comparar dos cultivos en forma simultánea. Eligiendo el cultivo deseado a comparar en el selector de Cultivo 1 y 2 respectivamente (atención en leer la cantidad de jornales en el eje x, ya que varían al cambiar los cultivos). 
+Se puede corroborar fácilmente que la suma de jornales en los gráficos inferiores en los distintos meses, sea igual al total de jornales que aparece en el gráfico superior.
+",width = 12),
+              ),
+      tabItem("nc",
+              fluidPage(
+                box(
+                  selectInput("m1", "Seleccione Mes o Jornales totales anuales = JornTotal",
+                              c("JornTotal","ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC")), width = 8),
+                box(plotlyOutput("Comparación"), width = 12),
+                box(print ("Tabla de Comparación Jornales entre cultivos en Arica y Atacama"), width = 12, style ="font-size:30px"),
+                box(selectInput("c11", "Cultivo 1:", c("Zapallo temp/guard","Lechuga","Choclo", "Tomate al aire libre",
+                                                       "Repollo","Cebolla de guarda","Brócoli","Betarraga",
+                                                       "Poroto Verde","Coliflor","Pimiento","Haba",
+                                                       "Zapallo Italiano","Acelga","Arveja Verde","Melón",
+                                                       "Pepino de ensalada" ,  "Orégano", "Sandía","Ají",
+                                                       "Maíz" ,"Papa" ,"Limonero" ,"Naranjo",
+                                                       "Lima" , "Olivo" , "Palto" , "Mango" ,
+                                                       "Tuna" , "Vid de mesa","Vid vinifera" )), width = 6),
+                box(selectInput("c22", "Cultivo 2:",c("Zapallo temp/guard","Lechuga","Choclo", "Tomate al aire libre",
+                                                      "Repollo","Cebolla de guarda","Brócoli","Betarraga",
+                                                      "Poroto Verde","Coliflor","Pimiento","Haba",
+                                                      "Zapallo Italiano","Acelga","Arveja Verde","Melón",
+                                                      "Pepino de ensalada" ,  "Orégano", "Sandía","Ají",
+                                                      "Maíz" ,"Papa" ,"Limonero" ,"Naranjo",
+                                                      "Lima" , "Olivo" , "Palto" , "Mango" ,
+                                                      "Tuna" , "Vid de mesa","Vid vinifera" )), width = 6),
+                box(plotOutput("c1"), width = 6),
+                box(plotOutput("c2"), width = 6),
+                box(print ("¡Los datos son importantes para tomar decisiones! en Agro in Data estamos comprometidos para ayudarlo con estos! Mas consultas a agroindata@gmail.com
+                         Este proyecto utiliza datos de ODEPA por medio del informe: Matriz de labores de cultivos por macro zonas, disponible en su página web."), width = 12, style ="font-size:20px"),
+                
+              )
+              
+      ),
+      tabItem("ng",
+              fluidPage(
+                box(
+                  selectInput("m2", "Seleccione Mes o Jornales totales anuales = JornTotal",
+                              c("JornTotal","ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC")), width = 8),
+                box(plotlyOutput("Compng"), width = 12),
+                box(print ("Tabla de Comparación Jornales entre cultivos en Coquimbo y Valparaíso"), width = 12, style ="font-size:30px"),
+                box(selectInput("c33", "Cultivo 1:", c("Lechuga","Choclo","Tomate al aire libre","Tomate invernadero",
+                                                       "Zanahoria","Repollo", "Alcachofa","Cebolla de Guarda","Brócoli","Ajo",                  
+                                                       "Poroto Verde","Haba","Apio","Zapallo Italiano","Orégano",              
+                                                       "Cebada","Arveja seca","Garbanzo","Papa","Poroto",               
+                                                       "Almendro","Nogal","Damasco","Duraznero cons fresco","Duraznero conservero", 
+                                                       "Ciruelo europeo" ,"Manzano rojo",  "Limonero", "Naranjo" ,"Mandarino",            
+                                                       "Olivo","Palto" , "Papayo", "Tuna"  ,"Vid de mesa",          
+                                                       "Vid vinifera","Vid pisquera", "Chirimoyo", "Granado"  )), width = 6),
+                box(selectInput("c44", "Cultivo 2:",c("Lechuga","Choclo","Tomate al aire libre","Tomate invernadero",
+                                                      "Zanahoria","Repollo", "Alcachofa","Cebolla de Guarda","Brócoli","Ajo",                  
+                                                      "Poroto Verde","Haba","Apio","Zapallo Italiano","Orégano",              
+                                                      "Cebada","Arveja seca","Garbanzo","Papa","Poroto",               
+                                                      "Almendro","Nogal","Damasco","Duraznero cons fresco","Duraznero conservero", 
+                                                      "Ciruelo europeo" ,"Manzano rojo",  "Limonero", "Naranjo" ,"Mandarino",            
+                                                      "Olivo","Palto" , "Papayo", "Tuna"  ,"Vid de mesa",          
+                                                      "Vid vinifera","Vid pisquera", "Chirimoyo", "Granado"  )), width = 6),
+                box(plotOutput("c3"), width = 6),
+                box(plotOutput("c4"), width = 6),
+                box(print ("¡Los datos son importantes para tomar decisiones! en Agro in Data estamos comprometidos para ayudarlo con estos! Mas consultas a agroindata@gmail.com
+                         Este proyecto utiliza datos de ODEPA por medio del informe: Matriz de labores de cultivos por macro zonas, disponible en su página web."), width = 12, style ="font-size:20px"),
+                
+              )
+              
+      ),
+      tabItem("central",
+              fluidPage(
+                box(
+                  selectInput("m3", "Seleccione Mes o Jornales totales anuales = JornTotal",
+                              c("JornTotal","ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC")), width = 8),
+                box(plotlyOutput("Compcentral"), width = 12),
+                box(print ("Tabla de Comparación Jornales entre cultivos en RM, O'higgins y Maule"), width = 12, style ="font-size:30px"),
+                box(selectInput("c55", "Cultivo 1:", c("Zapallo temp/guard","Lechuga","Choclo","Tomate al aire libre",
+                                                       "Tomate invernadero","Zanahoria","Repollo","Alcachofa" ,           
+                                                       "Cebolla de Guarda","Cebolla temprana","Brócoli","Ajo",                  
+                                                       "Betarraga","Coliflor","Pimiento","Haba",                 
+                                                       "Apio","Zapallo Italiano","Acelga","Arveja Verde" ,        
+                                                       "Espinaca","Melón", "Pepino de ensalada","Orégano",              
+                                                       "Sandía","Ají" , "Espárrago" , "Trigo" ,               
+                                                       "Maíz", "Cebada" , "Arroz" , "Avena",                
+                                                       "Garbanzo","Lenteja","Papa","Poroto" ,              
+                                                       "Tabaco", "Tomate Industrial","Pimentón industrial","Almendro",             
+                                                       "Nogal" ,"Frambuesa" , "Arándano americano","Moras cultivadas" ,    
+                                                       "Cerezo","Nectarino","Duraznero cons fresco", "Duraznero conservero", 
+                                                       "Ciruelo europeo","Ciruelo japonés","Manzano rojo","Manzano verde",        
+                                                       "Peral" ,"Limonero", "Naranjo", "Olivo",                
+                                                       "Palto", "Vid de mesa","Vid vinifera","Kiwi",                 
+                                                       "Granado")), width = 6),
+                box(selectInput("c66", "Cultivo 2:",c("Zapallo temp/guard","Lechuga","Choclo","Tomate al aire libre",
+                                                       "Tomate invernadero","Zanahoria","Repollo","Alcachofa" ,           
+                                                       "Cebolla de Guarda","Cebolla temprana","Brócoli","Ajo",                  
+                                                       "Betarraga","Coliflor","Pimiento","Haba",                 
+                                                       "Apio","Zapallo Italiano","Acelga","Arveja Verde" ,        
+                                                       "Espinaca","Melón", "Pepino de ensalada","Orégano",              
+                                                       "Sandía", "Ají" , "Espárrago" , "Trigo" ,               
+                                                       "Maíz" , "Cebada" , "Arroz" , "Avena",                
+                                                       "Garbanzo" ,"Lenteja","Papa","Poroto" ,              
+                                                       "Tabaco", "Tomate Industrial","Pimentón industrial","Almendro",             
+                                                       "Nogal" ,"Frambuesa" , "Arándano americano","Moras cultivadas" ,    
+                                                       "Cerezo","Nectarino","Duraznero cons fresco", "Duraznero conservero", 
+                                                       "Ciruelo europeo","Ciruelo japonés","Manzano rojo","Manzano verde",        
+                                                       "Peral" ,"Limonero", "Naranjo", "Olivo",                
+                                                       "Palto", "Vid de mesa","Vid vinifera","Kiwi",                 
+                                                       "Granado")), width = 6),
+                box(plotOutput("c5"), width = 6),
+                box(plotOutput("c6"), width = 6),
+                box(print ("¡Los datos son importantes para tomar decisiones! en Agro in Data estamos comprometidos para ayudarlo con estos! Mas consultas a agroindata@gmail.com
+                         Este proyecto utiliza datos de ODEPA por medio del informe: Matriz de labores de cultivos por macro zonas, disponible en su página web."), width = 12, style ="font-size:20px"),
+                
+              )
+              
+      ),
+      tabItem("sur",
+              fluidPage(
+                box(
+                  selectInput("m4", "Seleccione Mes o Jornales totales anuales = JornTotal",
+                              c("JornTotal","ENE","FEB","MAR","ABR","MAY","JUN","JUL","AGO","SEP","OCT","NOV","DIC")), width = 8),
+                box(plotlyOutput("Compsur"), width = 12),
+                box(print ("Tabla de Comparación Jornales entre cultivos en Biobío y Araucanía"), width = 12, style ="font-size:30px"),
+                box(selectInput("c77", "Cultivo 1:", c("Lechuga","Choclo","Tomate al aire libre", "Poroto granado",      
+                                                       "Zanahoria", "Cebolla de Guarda","Betarraga", "Poroto Verde",        
+                                                       "Coliflor","Haba","Apio", "Zapallo Italiano",    
+                                                       "Acelga", "Arveja Verde","Espinaca", "Melón",               
+                                                       "Sandía", "Ají","Espárrago", "Trigo",               
+                                                       "Arroz","Lenteja","Papa","Poroto",              
+                                                       "Lupino", "Avellano","Frambuesa", "Arándano americano",  
+                                                       "Cerezo", "Manzano rojo","Peral", "Kiwi" )), width = 6),
+                box(selectInput("c88", "Cultivo 2:",c("Lechuga","Choclo","Tomate al aire libre", "Poroto granado",      
+                                                      "Zanahoria", "Cebolla de Guarda","Betarraga", "Poroto Verde",        
+                                                      "Coliflor","Haba","Apio", "Zapallo Italiano",    
+                                                      "Acelga", "Arveja Verde","Espinaca", "Melón",               
+                                                      "Sandía", "Ají","Espárrago", "Trigo",               
+                                                      "Arroz","Lenteja","Papa","Poroto",              
+                                                      "Lupino", "Avellano","Frambuesa", "Arándano americano",  
+                                                      "Cerezo", "Manzano rojo","Peral", "Kiwi"  )), width = 6),
+                box(plotOutput("c7"), width = 6),
+                box(plotOutput("c8"), width = 6),
+                box(print ("¡Los datos son importantes para tomar decisiones! en Agro in Data estamos comprometidos para ayudarlo con estos! Mas consultas a agroindata@gmail.com
+                         Este proyecto utiliza datos de ODEPA por medio del informe: Matriz de labores de cultivos por macro zonas, disponible en su página web."), width = 12, style ="font-size:20px"),
+                
+              )
+              
+      ),
+      tabItem("pr",
+              fluidPage(
+                h1("Sobre el Proyecto JAC"),
+                box("El Proyecto JAC nació en Mayo del 2022, con el fin de entregar una herramienta didáctica que permita al usuario tomar decisiones más informadas, oportunas y eficientes. Con la finalidad de hacer más visibles los datos gubernamentales y así,  poder simular y comparar diferentes requerimientos de jornales en los cultivos a lo largo de Chile. El dashboard fue creado y desarrollado en Chile utilizando lenguaje estadístico R.
+Si quiere indagar más en la importancia del empleo en la agricultura, se sugiere consultar la función de producción de Cobb Douglas para entender mejor la relación del capital, empleo y avances tecnológicos. De modo de comprender mejor el impacto de estos en la producción agropecuaria.
+",width = 12),
+                h1("¿Le gustó este proyecto?"),
+                box("Estaremos felices de recibir su feedback para saber cómo mejorar, qué otras aplicaciones son necesarias o ayudarlo a desarrollar su propio proyecto de datos. Para esto y más consultas, no dude en escribirnos a agroindata@gmail.com",width=12),
+                h1("Descargo de responsabilidad:"),
+                box("La Aplicación web JAC ni AGRO in DATA, se hace cargo de errores que podrían haber en los datos entregados por la fuente. Además, se sugiere utilizar estos datos y comparaciones como un primer acercamiento a un nuevo cultivo, por lo que dichos jornales deben ser corroborados y ajustados al nivel tecnológico del agricultor o empresa. Ya que existen varios otros factores que pueden modificar la cantidad de jornales por hectárea en los distintos cultivos.",width = 12)
+              ))
+      
+    )))
+# Define server logic required to draw a histogram
+server <- function(input, output) {
+  #Arica Atacama nc
+  
+  output$Comparación <- renderPlotly( { 
+    tDataNC %>%
+      plot_ly(x = ~ tDataNC$Especie, y = ~ tDataNC[[input$m1]], type = "bar", 
+              marker = list(color = 'green',
+                            line = list(color = 'green',
+                                        width = 1.5)) )%>%
+      layout(
+        title =  "Jornales/ha por cultivos en ARICA y ATACAMA",
+        xaxis = list(title = "cultivos"),
+        yaxis = list(title = "jornales")
+      )
+  } )
+  
+  
+  #c1
+  output$c1 <- renderPlot({
+    plot(ggplot(DataNC, aes(x=fct_inorder(Especie), y=DataNC[[input$c11]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=DataNC[[input$c11]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+    
+  })
+  #c2
+  output$c2 <- renderPlot({
+    plot(ggplot(DataNC, aes(x=fct_inorder(Especie), y=DataNC[[input$c22]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=DataNC[[input$c22]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  #ng
+  output$Compng <- renderPlotly( { 
+    tDataNG %>%
+      plot_ly(x = ~ tDataNG$Especie, y = ~ tDataNG[[input$m2]], type = "bar", 
+              marker = list(color = 'green',
+                            line = list(color = 'green',
+                                        width = 1.5)) )%>%
+      layout(
+        title =  "Jornales/ha por cultivos en Coquimbo y Valparaíso",
+        xaxis = list(title = "cultivos"),
+        yaxis = list(title = "jornales")
+      )
+  } )
+  
+  
+  #c3
+  output$c3 <- renderPlot({
+    plot(ggplot(DataNG, aes(x=fct_inorder(Especie), y=DataNG[[input$c33]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=DataNG[[input$c33]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  #c4
+  output$c4 <- renderPlot({
+    plot(ggplot(DataNG, aes(x=fct_inorder(Especie), y=DataNG[[input$c44]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=DataNG[[input$c44]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  #central
+  output$Compcentral <- renderPlotly( { 
+    tDatacentral %>%
+      plot_ly(x = ~ tDatacentral$Especie, y = ~ tDatacentral[[input$m3]], type = "bar", 
+              marker = list(color = 'green',
+                            line = list(color = 'green',
+                                        width = 1.5)) )%>%
+      layout(
+        title =  "Jornales/ha por cultivos en R.M. O'Higgins y Maule",
+        xaxis = list(title = "cultivos"),
+        yaxis = list(title = "jornales")
+      )
+  } )
+  
+  
+  #c5
+  output$c5 <- renderPlot({
+    plot(ggplot(DataNcentral, aes(x=fct_inorder(Especie), y=DataNcentral[[input$c55]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=DataNcentral[[input$c55]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  #c6
+  output$c6 <- renderPlot({
+    plot(ggplot(DataNcentral, aes(x=fct_inorder(Especie), y=DataNcentral[[input$c66]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=DataNcentral[[input$c66]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  
+  #sur
+  output$Compsur <- renderPlotly( { 
+    tDataNG %>%
+      plot_ly(x = ~ tDataNG$Especie, y = ~ tDataNG[[input$m4]], type = "bar", 
+              marker = list(color = 'green',
+                            line = list(color = 'green',
+                                        width = 1.5)) )%>%
+      layout(
+        title =  "Jornales/ha por cultivos en Biobío y Araucanía",
+        xaxis = list(title = "cultivos"),
+        yaxis = list(title = "jornales")
+      )
+  } )
+  
+  
+  #c7
+  output$c7 <- renderPlot({
+    plot(ggplot(Datasur, aes(x=fct_inorder(Especie), y=Datasur[[input$c77]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=Datasur[[input$c77]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  #c8
+  output$c8 <- renderPlot({
+    plot(ggplot(Datasur, aes(x=fct_inorder(Especie), y=Datasur[[input$c88]]))+
+           geom_bar(stat = "identity", width = 0.9, fill= "darkgreen")+
+           geom_text(aes(label=Datasur[[input$c88]]), colour= "white", vjust= 0.5, hjust=1, size = 5)+
+           ggtitle("Jornales/ha por meses")+
+           xlab("Meses")+ylab("Jornales")+coord_flip() )
+    
+  })
+  
+}
+
+# Run the application 
+shinyApp(ui, server)
